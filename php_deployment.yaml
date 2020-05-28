@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: php
+        tier: backend
+    spec:
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: code
+      containers:
+      - name: php
+        image: linuxdevgon1/myphpapp:4.0
+        volumeMounts:
+        - name: code
+          mountPath: /code
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "cp -r /var/www/. /code"]
+#        command: 
+#        - /bin/sh
+#        args:
+#        - "-c"
+#        - "touch code/123456.html"
+#        - mkdir
+#        - "code/rew1"
+#        - cp
+#        - "/var/www/index.php"
+#        - "code/rew1"
+
+#      initContainers:
+#      - name: install
+#        image: busybox
+#        command:
+#        - touch 
+#        - "code/12345.html"
+#        - mkdir
+#        - "code/rew1"
+#        - cp
+#        - "/var/www/index.php" 
+#        - "code/rew1"
+#        volumeMounts:
+#        - name: code
+#          mountPath: /code
